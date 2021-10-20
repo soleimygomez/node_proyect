@@ -1,10 +1,10 @@
 var express = require("express");
 var router = express.Router();
-
+const cors = require('cors');
 const connection = require("../database.js");
 
 // GET All Plan
-router.get("/all", (req, res) => {
+router.get("/all", cors(),(req, res) => {
   //   res.send("entra");
   connection.query("SELECT * FROM plan", (err, rows, fields) => {
     if (!err) {
@@ -16,7 +16,7 @@ router.get("/all", (req, res) => {
 });
 
 // GET An Plan
-router.get("/:id", (req, res) => {
+router.get("/:id",cors(), (req, res) => {
   const { id } = req.params;
   connection.query(
     "SELECT * FROM plan WHERE id = ?",
@@ -34,7 +34,7 @@ router.get("/:id", (req, res) => {
 
 //POST An Register plan
 
-router.post("/register", (req, res) => {
+router.post("/register", cors(),(req, res) => {
   const sql = "INSERT INTO plan SET ?";
 
   const planObj = {
@@ -56,16 +56,16 @@ router.post("/register", (req, res) => {
 });
 
 // PUT An Update Plan valor cuota
-router.put("/update/:id", (req, res) => {
-  const { id } = req.params;
-  const { valorcuota } = req.body;
-  const sql = ` UPDATE plan SET valorcuota='${valorcuota}' 
-    WHERE id =${id};
-    `;
-  connection.query(sql, (err) => {
-    if (err) throw err;
-    res.send("Plan Update!");
-  });
-});
+// router.put("/update/:id", (req, res) => {
+//   const { id } = req.params;
+//   const { valorcuota } = req.body;
+//   const sql = ` UPDATE plan SET valorcuota='${valorcuota}' 
+//     WHERE id =${id};
+//     `;
+//   connection.query(sql, (err) => {
+//     if (err) throw err;
+//     res.send("Plan Update!");
+//   });
+// });
 
 module.exports = router;

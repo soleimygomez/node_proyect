@@ -1,10 +1,10 @@
 var express = require("express");
 var router = express.Router();
-
+const cors = require('cors');
 const connection = require("../database.js");
 
 // GET All Client
-router.get("/all", (req, res) => {
+router.get("/all", cors(),(req, res) => {
   //   res.send("entra");
   connection.query("SELECT * FROM cliente", (err, rows, fields) => {
     if (!err) {
@@ -16,7 +16,7 @@ router.get("/all", (req, res) => {
 });
 
 // GET An Client
-router.get("/:cedula", (req, res) => {
+router.get("/:cedula",cors(), (req, res) => {
   const { cedula } = req.params;
   connection.query(
     "SELECT * FROM cliente WHERE cedula = ?",
@@ -33,7 +33,7 @@ router.get("/:cedula", (req, res) => {
 });
 
 //POST An Register Cliente
-router.post("/register", (req, res) => {
+router.post("/register",cors(), (req, res) => {
   const sql = "INSERT INTO cliente SET ?";
 
   const clientObj = {
@@ -51,7 +51,7 @@ router.post("/register", (req, res) => {
   });
 });
 // PUT An Update Cliente document
-router.put("/updateDocument/:cedula", (req, res) => {
+router.put("/updateDocument/:cedula", cors(),(req, res) => {
   const { id } = req.params;
   const { documento } = req.body;
   const sql = ` UPDATE cliente SET documento='${documento}' 
@@ -64,10 +64,10 @@ router.put("/updateDocument/:cedula", (req, res) => {
 });
 
 // PUT An Update Cliente
-router.put("/update/:cedula", (req, res) => {
+router.put("/update/:cedula", cors(),(req, res) => {
   const { cedula } = req.params;
   const { nombre, apellido, telefono, direccion, correo } = req.body;
-  const sql = ` UPDATE cliente SET nombre='${nombre}', apellido='${apellido}', telefono='${telefono}' , direccion='${direccion}' ,correo='${correo}' 
+  const sql = ` UPDATE cliente SET nombre='${nombre}', apellido='${apellido}', telefono='${telefono}' , direccion='${direccion}' ,correo='${correo}',documento='${documento} 
   WHERE cedula =${cedula};
   `;
   connection.query(sql, (err) => {
