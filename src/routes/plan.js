@@ -40,7 +40,7 @@ router.post("/register", cors(),(req, res) => {
   const planObj = {
     monto: req.body.monto,
     interes: req.body.interes,
-    cuotas: req.body.cuotas,
+    cuota: req.body.cuota,
     forma_pago: req.body.forma_pago,
     valorcuota: req.body.valorcuota,
     cliente: req.body.cliente,

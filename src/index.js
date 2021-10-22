@@ -2,21 +2,22 @@ const express = require("express");
 const app = express();
 const clientRoutes = require("./routes/cliente.js");
 const planRoutes = require("./routes/plan.js");
-const cors = require('cors');
-
 const multer = require('multer');
 const path = require('path');
+const morgan = require('morgan');
+app.use(morgan('dev'));
+var cors = require('cors');
+app.use(cors());
+app.options('*', cors())
+app.all('*', function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, Content-Type, X-Auth-Token,  X-Requested-With, Accept, Authorization");
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
 
-let storage=multer.diskStorage({
-  destination:(req,file,cb)=>{
-    cb(null,'./numerocedula')
-  },
-  filename:(req,file,cb)=>{
-    cb(null, file.fielname + '-' + Date.now() + path.extname(file.originalname));
-  }
-})
+    next();
+});
 
-const upload = multer({storage});
+ 
 
 //Setting
 app.set("port", process.env.PORT || 3001);
@@ -32,10 +33,22 @@ app.use(express.urlencoded({extended:true}));
 app.use('/client',clientRoutes);
 app.use('/plan',planRoutes); 
 
- 
+
+let storage=multer.diskStorage({
+  destination:(req,file,cb)=>{
+    cb(null,'./numerocedula')
+  },
+  filename:(req,file,cb)=>{
+    cb(null, file.fielname + '-' + Date.now() + path.extname(file.originalname));
+  }
+})
+
+const upload = multer({storage});
+
 // file
-app.post('/subir',upload.single('file'),cors(),(req,res)=>{
+app.put('/subir/:cedula',upload.single('documento'),cors(),(req,res)=>{
   console.log(`Storage location is ${req.hostname}/${req.file.path}`);
+   
   return res.send(req.file);
 })
 
